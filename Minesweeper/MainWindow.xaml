@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Minesweeper"
+        xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
 
@@ -34,7 +35,7 @@
                             <Border x:Name="ButtonBottomBorder" BorderBrush="{StaticResource CellBackgroundDark}" BorderThickness="0,0,0,3"
                                 Visibility="Visible"/>
                         </Grid>
-                        
+
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -42,13 +43,59 @@
         </Style>
     </Window.Resources>
 
-    <Grid>
-
-        <Grid x:Name="gameGrid">
-            
-        </Grid>
-        
-    </Grid>
+    <Border Padding="12"
+            Background="{StaticResource CellBackground}">
     
+        <Grid>
+        
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Margin="0 0 0 12">
+                <Grid x:Name="hudGrid" Grid.Row="1">
+                    
+                    <Border BorderBrush="{StaticResource CellBackgroundDark}" BorderThickness="3,0,0,0"
+                                    Visibility="Visible"/>
+                    <Border BorderBrush="{StaticResource CellBackgroundDark}" BorderThickness="0,3,0,0"
+                                    Visibility="Visible"/>
+                    <Border BorderBrush="{StaticResource White}" BorderThickness="0,0,3,0"
+                                    Visibility="Visible"/>
+                    <Border BorderBrush="{StaticResource White}" BorderThickness="0,0,0,3"
+                                    Visibility="Visible"/>
+
+                    <Grid HorizontalAlignment="Center" Margin="8" >
+                        <emoji:TextBlock x:Name="emojiSymbol"
+                                            Text="🙂" 
+                                            FontSize="24" 
+                                            Margin="4"/>
+
+                        <Border x:Name="ButtonLeftBorder" BorderBrush="{StaticResource White}" BorderThickness="3,0,0,0"/>
+                        <Border x:Name="ButtonTopBorder" BorderBrush="{StaticResource White}" BorderThickness="0,3,0,0"/>
+                        <Border x:Name="ButtonRightBorder" BorderBrush="{StaticResource CellBackgroundDark}" BorderThickness="0,0,3,0"/>
+                        <Border x:Name="ButtonBottomBorder" BorderBrush="{StaticResource CellBackgroundDark}" BorderThickness="0,0,0,3"/>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1">
+                
+                <Border BorderBrush="{StaticResource CellBackgroundDark}" BorderThickness="3,0,0,0"
+                                    Visibility="Visible"/>
+                <Border BorderBrush="{StaticResource CellBackgroundDark}" BorderThickness="0,3,0,0"
+                                    Visibility="Visible"/>
+                <Border BorderBrush="{StaticResource White}" BorderThickness="0,0,3,0"
+                                    Visibility="Visible"/>
+                <Border BorderBrush="{StaticResource White}" BorderThickness="0,0,0,3"
+                                    Visibility="Visible"/>
+
+                <Grid x:Name="gameGrid" Margin="3"/>
+
+            </Grid>
+
+        </Grid>
+    </Border>
+
 </Window>
     

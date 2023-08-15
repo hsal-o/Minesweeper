@@ -29,6 +29,8 @@ namespace Minesweeper
         public bool isExposed { get; set; }
         public bool isFlagged { get; set; }
         public Button button { get; set; }
+        public event EventHandler MineClicked;
+
 
         public Cell()
         {
@@ -51,7 +53,7 @@ namespace Minesweeper
             isFlagged = !isFlagged;
 
             if (isFlagged)
-                button.Content = "`";
+                button.Content = Application.Current.Resources["Flag_Symbol"];
             else
                 button.Content = "";
         }
@@ -93,13 +95,16 @@ namespace Minesweeper
                 return;
 
             isExposed = true;
+            button.IsEnabled = false;
 
             exposeBorders();
 
             if (hasMine) // If the clicked cell has a mine
             {
                 // Handle mine click
-                button.Content = "*";
+                MineClicked?.Invoke(this, EventArgs.Empty);
+
+                button.Content = Application.Current.Resources["Mine_Symbol"];
                 button.Background = Application.Current.Resources["Red"] as Brush;
             }
             else
@@ -197,6 +202,8 @@ namespace Minesweeper
                     // Check if current cell was predetermined to have a mine to update neighbors' counts
                     if (Cells[row, col].hasMine)
                     {
+                        Cells[row, col].MineClicked += handleMineClicked;
+
                         // Loop through current cell's neighbors
                         for (int _r = -1; _r <= 1; _r++)
                         {
@@ -217,13 +224,40 @@ namespace Minesweeper
 
         private void initializeGameGrid()
         {
+            gameGrid.IsEnabled = true;
             initializeCellGrid();
             initializeMines();
             initializeCells();
         }
 
+        private void exposeAllMines()
+        {
+            Cell[] cellsWithMines = Cells.Cast<Cell>().Where(cell => cell.hasMine).ToArray();
+            foreach (Cell cell in cellsWithMines)
+            {
+                //cell.expose();
+                cell.button.Content = Application.Current.Resources["Mine_Symbol"];
+            }
+        }
+
+        private void gameOver()
+        {
+            gameGrid.IsEnabled = false;
+            exposeAllMines();
+
+            emojiSymbol.Text = "☠️";
+        }
+
+        private void handleMineClicked(object sender, EventArgs e)
+        {
+            // Call the gameOver() function here
+            gameOver();
+        }
+
         private void cellButton_PreviewMouseLeftButtonDown(object sender, RoutedEventArgs e)
         {
+            emojiSymbol.Text = "😮";
+
             Button button = (Button)sender;
             int row = (int)button.GetValue(Grid.RowProperty);
             int col = (int)button.GetValue(Grid.ColumnProperty);
@@ -237,6 +271,8 @@ namespace Minesweeper
 
         private void cellButton_PreviewMouseLeftButtonUp(object sender, RoutedEventArgs e)
         {
+            emojiSymbol.Text = "🙂";
+
             Button button = (Button)sender;
             int row = (int)button.GetValue(Grid.RowProperty);
             int col = (int)button.GetValue(Grid.ColumnProperty);
