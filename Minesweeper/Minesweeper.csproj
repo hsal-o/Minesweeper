@@ -8,10 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\E1234.ttf" />
     <None Remove="Fonts\mine-sweeper.ttf" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Fonts\E1234.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Fonts\mine-sweeper.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

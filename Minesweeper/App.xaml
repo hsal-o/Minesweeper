@@ -6,31 +6,39 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
 
-        <!--The FontStruction “MINE-SWEEPER”
-        (https://fontstruct.com/fontstructions/show/1501665) by Gangetsha Lyx is
-        licensed under a Creative Commons Attribution Share Alike license
-        (http://creativecommons.org/licenses/by-sa/3.0/).-->
-        <FontFamily x:Key="Minesweeper">./Fonts/mine-sweeper.ttf#mine-sweeper</FontFamily>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/CellButtonStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-        <SolidColorBrush x:Key="CellBackground" Color="#BDBDBD"/>
-        <SolidColorBrush x:Key="CellBackgroundDark" Color="#7B7B7B"/>
-        <SolidColorBrush x:Key="White" Color="#FFFFFF"/>
-        <SolidColorBrush x:Key="Black" Color="#000000"/>
-        <SolidColorBrush x:Key="Gray" Color="#808080"/>
+            <!--The FontStruction “MINE-SWEEPER”
+            (https://fontstruct.com/fontstructions/show/1501665) by Gangetsha Lyx is
+            licensed under a Creative Commons Attribution Share Alike license
+            (http://creativecommons.org/licenses/by-sa/3.0/).-->
+            <FontFamily x:Key="Minesweeper">./Fonts/mine-sweeper.ttf#mine-sweeper</FontFamily>
+            <FontFamily x:Key="DigitalDisplay">./Fonts/E1234.ttf#E1234</FontFamily>
 
-        <system:String x:Key="Flag_Symbol">`</system:String>
-        <system:String x:Key="Mine_Symbol">*</system:String>
+            <SolidColorBrush x:Key="CellBackground" Color="#BDBDBD"/>
+            <SolidColorBrush x:Key="CellBackgroundDark" Color="#7B7B7B"/>
+            <SolidColorBrush x:Key="White" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="Black" Color="#000000"/>
+            <SolidColorBrush x:Key="Gray" Color="#808080"/>
 
-        <SolidColorBrush x:Key="Red" Color="#FF0000"/>
+            <system:String x:Key="Flag_Symbol">`</system:String>
+            <system:String x:Key="Mine_Symbol">*</system:String>
 
-        <SolidColorBrush x:Key="1_Color" Color="#0000FF"/>
-        <SolidColorBrush x:Key="2_Color" Color="#338D33"/>
-        <SolidColorBrush x:Key="3_Color" Color="#FF0000"/>
-        <SolidColorBrush x:Key="4_Color" Color="#00007B"/>
-        <SolidColorBrush x:Key="5_Color" Color="#7b0000"/>
-        <SolidColorBrush x:Key="6_Color" Color="#008080"/>
-        <SolidColorBrush x:Key="7_Color" Color="#000000"/>
-        <SolidColorBrush x:Key="8_Color" Color="#808080"/>
+            <SolidColorBrush x:Key="Red" Color="#FF0000"/>
+
+            <SolidColorBrush x:Key="1_Color" Color="#0000FF"/>
+            <SolidColorBrush x:Key="2_Color" Color="#338D33"/>
+            <SolidColorBrush x:Key="3_Color" Color="#FF0000"/>
+            <SolidColorBrush x:Key="4_Color" Color="#00007B"/>
+            <SolidColorBrush x:Key="5_Color" Color="#7b0000"/>
+            <SolidColorBrush x:Key="6_Color" Color="#008080"/>
+            <SolidColorBrush x:Key="7_Color" Color="#000000"/>
+            <SolidColorBrush x:Key="8_Color" Color="#808080"/>
+
+        </ResourceDictionary>
 
     </Application.Resources>
 </Application>

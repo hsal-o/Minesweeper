@@ -4,44 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Minesweeper"
-        xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
+        xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf" 
+        xmlns:controls="clr-namespace:Minesweeper.Controls"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
 
-
-    <Window.Resources>
-        <Style x:Key="CellButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="{StaticResource CellBackground}"/>
-            <Setter Property="Foreground" Value="{StaticResource Black}"/>
-            <Setter Property="FontFamily" Value="{StaticResource Minesweeper}"/>
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Width" Value="30" />
-            <Setter Property="Height" Value="30" />
-
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Grid>
-                            <Border x:Name="ButtonBackground" Background="{TemplateBinding Background}">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <Border x:Name="ButtonLeftBorder" BorderBrush="{StaticResource White}" BorderThickness="3,0,0,0"
-                                Visibility="Visible"/>
-                            <Border x:Name="ButtonTopBorder" BorderBrush="{StaticResource White}" BorderThickness="0,3,0,0"
-                                Visibility="Visible"/>
-                            <Border x:Name="ButtonRightBorder" BorderBrush="{StaticResource CellBackgroundDark}" BorderThickness="0,0,3,0"
-                                Visibility="Visible"/>
-                            <Border x:Name="ButtonBottomBorder" BorderBrush="{StaticResource CellBackgroundDark}" BorderThickness="0,0,0,3"
-                                Visibility="Visible"/>
-                        </Grid>
-
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-
-        </Style>
-    </Window.Resources>
 
     <Border Padding="12"
             Background="{StaticResource CellBackground}">
@@ -65,17 +32,47 @@
                     <Border BorderBrush="{StaticResource White}" BorderThickness="0,0,0,3"
                                     Visibility="Visible"/>
 
-                    <Grid HorizontalAlignment="Center" Margin="8" >
-                        <emoji:TextBlock x:Name="emojiSymbol"
-                                            Text="🙂" 
-                                            FontSize="24" 
-                                            Margin="4"/>
+                    <!-- Flags Remaining Counter -->
+                    <Border HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="Black"
+                            Height="auto"
+                            Width="auto"
+                            Margin="16 8">
+                        
+                        <TextBlock x:Name="txt_NumFlagsLeft"
+                                   Padding="0 5 0 0"
+                                   HorizontalAlignment="Center" 
+                                   VerticalAlignment="Center"
+                                   Foreground="Red"
+                                   FontSize="36"
+                                   FontFamily="{StaticResource DigitalDisplay}"
+                                   Text="000"/>
+                    </Border>
 
-                        <Border x:Name="ButtonLeftBorder" BorderBrush="{StaticResource White}" BorderThickness="3,0,0,0"/>
-                        <Border x:Name="ButtonTopBorder" BorderBrush="{StaticResource White}" BorderThickness="0,3,0,0"/>
-                        <Border x:Name="ButtonRightBorder" BorderBrush="{StaticResource CellBackgroundDark}" BorderThickness="0,0,3,0"/>
-                        <Border x:Name="ButtonBottomBorder" BorderBrush="{StaticResource CellBackgroundDark}" BorderThickness="0,0,0,3"/>
-                    </Grid>
+                    <!-- Second Counter -->
+                    <Border HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Background="Black"
+                            Height="auto"
+                            Width="auto"
+                            Margin="16 8">
+
+                        <TextBlock x:Name="txt_secondCounter"
+                                   Padding="0 5 0 0"
+                                   HorizontalAlignment="Center" 
+                                   VerticalAlignment="Center"
+                                   Foreground="Red"
+                                   FontSize="36"
+                                   FontFamily="{StaticResource DigitalDisplay}"
+                                   Text="000"/>
+                    </Border>
+
+
+                    <controls:EmojiButton x:Name="emojiButton" 
+                                          Margin="4" Click="emojiButton_Click"
+                                          HorizontalAlignment="Center"/>
+
                 </Grid>
             </Border>
 
