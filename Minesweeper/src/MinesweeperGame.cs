@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows;
 using Minesweeper.Controls;
 using System.Windows.Media;
+using System.Diagnostics;
 
 namespace Minesweeper.src
 {
@@ -23,6 +24,17 @@ namespace Minesweeper.src
 
         private Grid gameGrid;
 
+        public event EventHandler GameStarted;
+        public event EventHandler GameLost;
+        public event EventHandler GameWon;
+        public event EventHandler GameReset;
+
+        public event EventHandler<IntEventArgs> UpdateNumFlagsLeft;
+
+        public event EventHandler CellLeftClickDown;
+        public event EventHandler CellLeftClickUp;
+
+
         public static int WIN = 1;
         public static int LOSE = 0;
 
@@ -30,23 +42,24 @@ namespace Minesweeper.src
         {
             numRows = 16;
             numColumns = 30;
-            mineCount = 99;
+            mineCount = 10;
             numSafeCells = (numRows * numColumns) - mineCount;
             numExposedCells = 0;
             inProgress = false;
             Cells = new Cell[numRows, numColumns];
+
         }
 
         public void initializeGame(ref Grid gameGrid)
         {
-            //resetVariableCounts();
-            //emojiButton.setSymbol("🙂");
-            //gameGrid.IsEnabled = true;
-
+            resetVariables();
             initializeGrid();
             initializeMines();
             initializeCells(ref gameGrid);
         }
+
+        
+
         public void initializeGrid()
         {
             Array.Clear(Cells, 0, Cells.Length); // Clear cells
@@ -60,6 +73,9 @@ namespace Minesweeper.src
         private void initializeCells(ref Grid gameGrid)
         {
             this.gameGrid = gameGrid;
+
+            // Enable gamegrid
+            gameGrid.IsEnabled = true;
 
             // Clear gameGrid contents
             gameGrid.Children.Clear();
@@ -137,37 +153,40 @@ namespace Minesweeper.src
 
         public void resetVariables()
         {
-            //secondsCount = 0;
-            //numFlagsLeft = mineCount;
-            //numSafeCells = (Columns * Rows) - mineCount;
-            //numExposedCells = 0;
+            numFlagsLeft = mineCount;
+            numSafeCells = (numColumns * numRows) - mineCount;
+            numExposedCells = 0;
 
-            //txt_secondCounter.Text = secondsCount.ToString("D3");
+            UpdateNumFlagsLeft?.Invoke(this, new IntEventArgs(numFlagsLeft));
         }
 
+        public void restartGame(ref Grid gameGrid)
+        {
+            GameReset?.Invoke(this, EventArgs.Empty);
+            initializeGame(ref gameGrid);
+            inProgress = false;
+        }
 
         private void startGame()
         {
+            GameStarted?.Invoke(this, EventArgs.Empty);
             inProgress = true;
-            //timer.Start();
         }
 
         private void loseGame()
         {
-            //timer.Stop();
+            GameLost?.Invoke(this, EventArgs.Empty);
             inProgress = false;
             gameGrid.IsEnabled = false;
             exposeAllMines(LOSE);
-            //emojiButton.setSymbol("☠️");
         }
 
         private void winGame()
         {
-            //timer.Stop();
+            GameWon?.Invoke(this, EventArgs.Empty);
             inProgress = false;
             gameGrid.IsEnabled = false;
             exposeAllMines(WIN);
-            //emojiButton.setSymbol("😎");
         }
 
 
@@ -177,10 +196,9 @@ namespace Minesweeper.src
             if (row < 0 || row >= numRows || col < 0 || col >= numColumns || Cells[row, col].isExposed)
                 return;
 
+            // Start game if this is first cell exposed
             if (!inProgress)
-            {
                 startGame();
-            }
 
             // Expose button
             Cells[row, col].expose();
@@ -189,9 +207,7 @@ namespace Minesweeper.src
             {
                 numExposedCells++;
                 if (numExposedCells == numSafeCells)
-                {
                     winGame();
-                }
             }
 
             // If the clicked cell is empty
@@ -221,6 +237,8 @@ namespace Minesweeper.src
                 numFlagsLeft--;
             else
                 numFlagsLeft++;
+
+            UpdateNumFlagsLeft?.Invoke(this, new IntEventArgs(numFlagsLeft));
         }
 
         private void cellButton_PreviewMouseRightButtonDown(object sender, RoutedEventArgs e)
@@ -232,14 +250,13 @@ namespace Minesweeper.src
             if (!Cells[row, col].isFlagged && numFlagsLeft == 0)
                 return;
 
-
             // Change borders of clicked button
             Cells[row, col].updatedFlagged();
         }
 
         private void cellButton_PreviewMouseLeftButtonUp(object sender, RoutedEventArgs e)
         {
-            //emojiButton.setSymbol("🙂");
+            CellLeftClickUp?.Invoke(this, EventArgs.Empty);
 
             Button button = (Button)sender;
             int row = (int)button.GetValue(Grid.RowProperty);
@@ -254,7 +271,7 @@ namespace Minesweeper.src
 
         private void cellButton_PreviewMouseLeftButtonDown(object sender, RoutedEventArgs e)
         {
-            //emojiButton.setSymbol("😮");
+            CellLeftClickDown?.Invoke(this, EventArgs.Empty);
 
             Button button = (Button)sender;
             int row = (int)button.GetValue(Grid.RowProperty);
