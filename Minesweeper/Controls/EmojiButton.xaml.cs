@@ -17,6 +17,11 @@ namespace Minesweeper.Controls
 {
     public partial class EmojiButton : UserControl
     {
+        public static string Smile_Emoji = "🙂";
+        public static string OpenMouth_Emoji = "😮‍";
+        public static string Lose_Emoji = "☠️";
+        public static string Win_Emoji = "😎";
+
         public static readonly DependencyProperty EmojiSymbolProperty =
             DependencyProperty.Register("EmojiSymbol", typeof(string), typeof(EmojiButton), new PropertyMetadata(string.Empty));
 
@@ -32,7 +37,7 @@ namespace Minesweeper.Controls
         {
             InitializeComponent();
 
-            setSymbol("🙂");
+            setSymbol(Smile_Emoji);
         }
 
         public void setSymbol(string symbol)

@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Minesweeper.Controls;
 using Minesweeper.src;
 
 
@@ -15,14 +16,24 @@ namespace Minesweeper
         private DispatcherTimer timer;
         private int secondsCount;
 
+        private DifficultyModes difficultyModes;
         private MinesweeperGame game;
-
 
         public MainWindow()
         {
             InitializeComponent();
 
-            game = new MinesweeperGame();
+            difficultyModes = new DifficultyModes();
+            initializeGame(difficultyModes.BeginnerMode);
+
+            initializeTimer();
+
+            SizeToContent = SizeToContent.WidthAndHeight; // Auto-fit window
+        }
+
+        public void initializeGame(Difficulty selectedDifficulty)
+        {
+            game = new MinesweeperGame(selectedDifficulty);
             game.GameStarted += Minesweeper_GameStarted;
             game.GameLost += Minesweeper_GameLost;
             game.GameWon += Minesweeper_GameWon;
@@ -31,93 +42,119 @@ namespace Minesweeper
             game.CellLeftClickDown += Minesweeper_CellLeftClickDown;
             game.CellLeftClickUp += Minesweeper_CellLeftClickUp;
             game.initializeGame(ref gameGrid);
-
-
-            InitializeTimer();
-
-            SizeToContent = SizeToContent.WidthAndHeight; // Auto-fit window
         }
 
+        public void resetGameDifficulty(Difficulty selectedDifficulty)
+        {
+            game.resetDifficulty(selectedDifficulty, ref gameGrid);
+        }
+
+        #region Minesweeper UI EventHandlers
         private void Minesweeper_UpdateNumFlagsLeft(object sender, IntEventArgs args)
         {
-            updateNumFlagsLeft(args.value);
-
-            Debug.WriteLine("args.value: " + args.value);
+            // Update Number of remaining flags UI
+            updateNumFlagsLeftUI(args.value);
         }
 
         private void Minesweeper_CellLeftClickDown(object sender, EventArgs e)
         {
-            emojiButton.setSymbol("😮‍");
+            // Update Emoji
+            updateEmojiSymbol(EmojiButton.OpenMouth_Emoji);
         }
 
         private void Minesweeper_CellLeftClickUp(object sender, EventArgs e)
         {
-            emojiButton.setSymbol("🙂");
+            // Update Emoji
+            updateEmojiSymbol(EmojiButton.Smile_Emoji);
         }
 
         private void Minesweeper_GameStarted(object sender, EventArgs e)
         {
-            emojiButton.setSymbol("🙂");
-            Debug.WriteLine("Game Started!");
-            secondsCount = 1;
-            updateTimer();
+            // Update Emoji
+            updateEmojiSymbol(EmojiButton.Smile_Emoji);
+
+            // Update timer
+            secondsCount = 1; // Game starts with 1 second
+            updateTimerUI();
             timer.Start();
         }
 
         private void Minesweeper_GameReset(object sender, EventArgs e)
         {
-            emojiButton.setSymbol("🙂");
-            Debug.WriteLine("Game Reset!");
+            // Update Emoji
+            updateEmojiSymbol(EmojiButton.Smile_Emoji);
+
+            // Update Timer
             timer.Stop();
             secondsCount = 0;
-            updateTimer();
+            updateTimerUI();
         }
 
         private void Minesweeper_GameLost(object sender, EventArgs e)
         {
-            emojiButton.setSymbol("☠️");
-            Debug.WriteLine("Game Lost!");
+            // Update Emoji
+            updateEmojiSymbol(EmojiButton.Lose_Emoji);
+
+            // Update Timer
             timer.Stop();
         }
 
         private void Minesweeper_GameWon(object sender, EventArgs e)
         {
-            emojiButton.setSymbol("😎");
-            updateNumFlagsLeft(0);
+            updateEmojiSymbol(EmojiButton.Win_Emoji);
+            updateNumFlagsLeftUI(0);
             Debug.WriteLine("Game Won!");
             timer.Stop();
         }
+        #endregion
 
-
-        private void Timer_Tick(object sender, EventArgs e)
+        #region UI methods
+        private void initializeTimer()
         {
-            if (secondsCount < 999)
-                secondsCount++;
-
-            updateTimer();
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += timer_Tick;
         }
-
-        private void updateTimer()
+        private void updateTimerUI()
         {
             txt_secondCounter.Text = secondsCount.ToString("D3");
         }
 
-        private void updateNumFlagsLeft(int value)
+        private void timer_Tick(object sender, EventArgs e)
         {
-            txt_NumFlagsLeft.Text = value.ToString("D3");
+            if (secondsCount < 999)
+                secondsCount++;
+
+            updateTimerUI();
         }
 
-        private void InitializeTimer()
+        // Method to directly update Emoji
+        private void updateEmojiSymbol(string value)
         {
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Tick += Timer_Tick;
+            emojiButton.setSymbol(value);
         }
-        
         private void emojiButton_Click(object sender, EventArgs e)
         {
             game.restartGame(ref gameGrid);
         }
-        
+
+        private void updateNumFlagsLeftUI(int value)
+        {
+            txt_NumFlagsLeft.Text = value.ToString("D3");
+        }
+        #endregion
+
+        #region Button click events
+        private void Button_GameClick(object sender, RoutedEventArgs e)
+        {
+            GameSettingsWindow gameSettingsWindow = new GameSettingsWindow();
+            gameSettingsWindow.Show();
+        }
+
+        private void Button_HelpClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+        #endregion
     }
 }

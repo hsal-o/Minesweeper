@@ -11,25 +11,27 @@ namespace Minesweeper.src
 {
     public class Cell
     {
-        private int row { get; set; }
+        public int row { get; set; }
         public int column { get; set; }
         public int count { get; set; }
         public bool hasMine { get; set; }
-        public bool isExposed { get; set; }
+        public bool isRevealed { get; set; }
         public bool isFlagged { get; set; }
+        public bool isSafeCell { get; set; }
         public Button button { get; set; }
 
         public event EventHandler MineClicked;
         public event EventHandler FlagUpdate;
 
-        public Cell()
+        public Cell(int row, int column)
         {
-            row = 0;
-            column = 0;
+            this.row = row;
+            this.column = column;
             count = 0;
             hasMine = false;
-            isExposed = false;
+            isRevealed = false;
             isFlagged = false;
+            isSafeCell = false;
             button = null;
         }
 
@@ -50,7 +52,7 @@ namespace Minesweeper.src
                 button.Content = "";
         }
 
-        public void exposeBorders()
+        public void hideBorders()
         {
             Border buttonLeftBorder = button.Template.FindName("ButtonLeftBorder", button) as Border;
             if (buttonLeftBorder != null)
@@ -81,15 +83,18 @@ namespace Minesweeper.src
             }
         }
 
-        public void expose()
+        public void reveal()
         {
+            // Return if already flagged
             if (isFlagged)
                 return;
 
-            isExposed = true;
+            // Set exposed
+            isRevealed = true;
             button.IsEnabled = false;
 
-            exposeBorders();
+            // Update Visual
+            hideBorders();
 
             // If the clicked cell has a mine
             if (hasMine)
@@ -102,7 +107,8 @@ namespace Minesweeper.src
             }
             else
             {
-                if (count > 0) // If the cell has a neighboring mine
+                // If the cell has a neighboring mine
+                if (count > 0) 
                 {
                     button.Content = count;
                     button.Foreground = Application.Current.Resources[count + "_Color"] as Brush;
